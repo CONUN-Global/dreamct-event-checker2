@@ -17,11 +17,14 @@ const iconsConfig = [
 
 export default function Home() {
   const dispatch = useDispatch()
-  const token = useSelector((state) => state.token)
-  const mutation = useSendToken(token)
+  // const token = useSelector((state) => state.token)
+  const token = 'cycon123'
   const [hasClicked, setHasClicked] = useState(false)
   const [message, setMessage] = useState({ text: '', type: null })
+  const [copyStatus, setCopyStatus] = useState(null)
+
   const location = useLocation()
+  const mutation = useSendToken(token)
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search)
@@ -47,15 +50,26 @@ export default function Home() {
 
   const handleClick = async () => {
     if (!token) return
-    setHasClicked(true)
-    try {
-      await mutation.mutateAsync(token)
-      setMessage({
-        text: 'Success! Your token has been submitted.',
-        type: 'success',
-      })
-    } catch (error) {
-      setMessage({ text: 'Error! Failed to submit your token.', type: 'error' })
+    if (mutation?.data?.data?.code) {
+      navigator.clipboard.writeText(mutation.data.data.code)
+      setCopyStatus('Copied')
+      setTimeout(() => {
+        setCopyStatus(null)
+      }, 1000)
+    } else {
+      setHasClicked(true)
+      try {
+        await mutation.mutateAsync()
+        setMessage({
+          text: 'Success! Your token has been submitted.',
+          type: 'success',
+        })
+      } catch (error) {
+        setMessage({
+          text: 'Error! Failed to submit your token.',
+          type: 'error',
+        })
+      }
     }
   }
 
@@ -145,8 +159,10 @@ export default function Home() {
             <p>
               {mutation.isLoading
                 ? 'Loading...'
+                : copyStatus
+                ? copyStatus
                 : hasClicked
-                ? mutation?.data?.data
+                ? mutation?.data?.data?.code
                 : 'Get Code'}
             </p>
             <img
@@ -157,6 +173,7 @@ export default function Home() {
               className={styles.copyIcon}
             />
           </div>
+
           {message && (
             <p className={`${styles.message} ${styles[message.type]}`}>
               {message.text}
