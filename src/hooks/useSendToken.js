@@ -4,7 +4,7 @@ import axios from 'axios'
 const sendToken = async (token) => {
   try {
     const response = await axios.get(
-      `metacon-api.conun.io/api/partners/getCode?token=${token}`
+      `https://metacon-api.conun.io/api/partners/getCode?token=${token}`
     )
 
     return response.data
