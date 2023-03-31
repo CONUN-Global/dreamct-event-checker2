@@ -59,7 +59,7 @@ export default function Home() {
     }
   }
 
-  console.log('data: ', mutation)
+  console.log('data: ', mutation?.data?.data)
 
   return (
     <div className={styles.container}>
@@ -146,7 +146,7 @@ export default function Home() {
               {mutation.isLoading
                 ? 'Loading...'
                 : hasClicked
-                ? mutation.data
+                ? mutation?.data?.data
                 : 'Get Code'}
             </p>
             <img
