@@ -17,8 +17,7 @@ const iconsConfig = [
 
 export default function Home() {
   const dispatch = useDispatch()
-  // const token = useSelector((state) => state.token)
-  const token = 'cycon123'
+  const token = useSelector((state) => state.token)
   const [hasClicked, setHasClicked] = useState(false)
   const [message, setMessage] = useState({ text: '', type: null })
   const [copyStatus, setCopyStatus] = useState(null)
