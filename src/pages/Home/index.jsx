@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useSendToken } from '../../hooks/useSendToken'
-import { setToken } from '../../store/tokenSlice'
+import { setCode, setToken } from '../../store/tokenSlice'
 import { Button } from '@mui/material'
 import { useLocation } from 'react-router-dom'
 import styles from './style.module.scss'
@@ -17,7 +17,7 @@ const iconsConfig = [
 
 export default function Home() {
   const dispatch = useDispatch()
-  const token = useSelector((state) => state.token)
+  const { token, code } = useSelector((state) => state.token)
   const [hasClicked, setHasClicked] = useState(false)
   const [message, setMessage] = useState({ text: '', type: null })
   const [copyStatus, setCopyStatus] = useState(null)
@@ -48,8 +48,9 @@ export default function Home() {
   )
 
   const handleClick = async () => {
-    if (!token) return
+    if (!token || !!code) return
     if (mutation?.data?.data?.code) {
+      dispatch(setCode(mutation?.data?.data?.code))
       navigator.clipboard.writeText(mutation.data.data.code)
       setCopyStatus('Copied')
       setTimeout(() => {

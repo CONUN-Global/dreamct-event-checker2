@@ -1,13 +1,23 @@
 import { createSlice } from '@reduxjs/toolkit'
 
+const initialState = {
+  token: '',
+  code: '',
+}
+
 const tokenSlice = createSlice({
   name: 'token',
-  initialState: '',
+  initialState,
   reducers: {
-    setToken: (state, action) => action.payload,
+    setToken: (state, action) => {
+      state.token = action.payload
+    },
+    setCode: (state, action) => {
+      state.code = action.payload
+    },
   },
 })
 
-export const { setToken } = tokenSlice.actions
+export const { setToken, setCode } = tokenSlice.actions
 
 export default tokenSlice.reducer
