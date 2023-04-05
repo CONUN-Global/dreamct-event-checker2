@@ -48,28 +48,34 @@ export default function Home() {
   )
 
   const handleClick = async () => {
-    if (!token || !!code) return
-    if (mutation?.data?.data?.code) {
-      dispatch(setCode(mutation?.data?.data?.code))
-      navigator.clipboard.writeText(mutation.data.data.code)
+    if (!token) return
+
+    if (!code) {
+      if (mutation?.data?.data?.code) {
+        dispatch(setCode(mutation?.data?.data?.code))
+      } else {
+        setHasClicked(true)
+        try {
+          await mutation.mutateAsync()
+          setMessage({
+            text: 'Success! Your token has been submitted.',
+            type: 'success',
+          })
+        } catch (error) {
+          setMessage({
+            text: 'Error! Failed to submit your token.',
+            type: 'error',
+          })
+        }
+      }
+    }
+
+    if (!!code || mutation?.data?.data?.code) {
+      navigator.clipboard.writeText(code || mutation?.data?.data?.code)
       setCopyStatus('Copied')
       setTimeout(() => {
         setCopyStatus(null)
       }, 1000)
-    } else {
-      setHasClicked(true)
-      try {
-        await mutation.mutateAsync()
-        setMessage({
-          text: 'Success! Your token has been submitted.',
-          type: 'success',
-        })
-      } catch (error) {
-        setMessage({
-          text: 'Error! Failed to submit your token.',
-          type: 'error',
-        })
-      }
     }
   }
 
@@ -157,13 +163,15 @@ export default function Home() {
           <div className={styles.block3Item1}>나의 응모코드</div>
           <div className={styles.block3Item2} onClick={() => handleClick()}>
             <p>
-              {mutation.isLoading
-                ? 'Loading...'
-                : copyStatus
+              {copyStatus
                 ? copyStatus
+                : !!code
+                ? code
+                : mutation.isLoading
+                ? 'Loading...'
                 : hasClicked
                 ? mutation?.data?.data?.code
-                : 'Get Code'}
+                : '코드 받기'}
             </p>
             <img
               src="/copy-icon.svg"
