@@ -12,7 +12,7 @@ const iconsConfig = [
   { x: 0, y: 16 },
   { x: 0, y: 5 },
   { x: 8, y: 20 },
-  { x: 3, y: 10 },
+  { x: 3, y: 10 }
 ]
 
 export default function Home() {
@@ -40,10 +40,10 @@ export default function Home() {
       from: { opacity: 0, transform: 'translate(0px, 0px) scale(0.1)' },
       to: {
         opacity: 1,
-        transform: `translate(${item.x}px, ${item.y}px) scale(1)`,
+        transform: `translate(${item.x}px, ${item.y}px) scale(1)`
       },
       config: { tension: 120, friction: 10 },
-      delay: index * 100,
+      delay: index * 100
     }))
   )
 
@@ -58,13 +58,13 @@ export default function Home() {
         try {
           await mutation.mutateAsync()
           setMessage({
-            text: 'Success! Your token has been submitted.',
-            type: 'success',
+            text: '코드 발급이 완료되었습니다.',
+            type: 'success'
           })
         } catch (error) {
           setMessage({
             text: 'Error! Failed to submit your token.',
-            type: 'error',
+            type: 'error'
           })
         }
       }
@@ -118,15 +118,15 @@ export default function Home() {
         {/* First div block */}
         <div className={styles.block1}>
           <img
-            src="/icons/icon1.png"
-            alt="Icon 1"
+            src='/icons/icon1.png'
+            alt='Icon 1'
             width={46.55}
             height={31.76}
           />
-          <img src="/icons/icon2.png" alt="Icon 2" width={8.59} height={8.6} />
+          <img src='/icons/icon2.png' alt='Icon 2' width={8.59} height={8.6} />
           <img
-            src="/icons/icon3.png"
-            alt="Icon 3"
+            src='/icons/icon3.png'
+            alt='Icon 3'
             width={43.41}
             height={24.74}
           />
@@ -136,8 +136,8 @@ export default function Home() {
         <div className={styles.block2}>
           <div className={styles.innerBlock}>
             <img
-              src="/icons/icon4.png"
-              alt="Icon 3"
+              src='/icons/icon4.png'
+              alt='Icon 3'
               width={126.29}
               height={26.9}
             />
@@ -174,8 +174,8 @@ export default function Home() {
                 : '코드 받기'}
             </p>
             <img
-              src="/copy-icon.svg"
-              alt="Copy Icon"
+              src='/copy-icon.svg'
+              alt='Copy Icon'
               width={32.61}
               height={32.61}
               className={styles.copyIcon}
@@ -202,18 +202,25 @@ export default function Home() {
           응모코드 <span>사용방법</span>
         </div>
         <img
-          src="/metacon-detail-icon.svg"
-          alt="Icon"
+          src='/metacon-detail-icon.svg'
+          alt='Icon'
           width={349.5}
           height={218.96}
         />
-        <Button
-          variant="contained"
-          color="primary"
-          className={styles.newBlockItem3}
+        <a
+          href='https://play.google.com/store/apps/details?id=com.metacon&pli=1'
+          target='_blank'
+          rel='noopener noreferrer'
+          style={{ textDecoration: 'none' }}
         >
-          Metacon 다운로드
-        </Button>
+          <Button
+            variant='contained'
+            color='primary'
+            className={styles.newBlockItem3}
+          >
+            Metacon 다운로드
+          </Button>
+        </a>
       </div>
     </div>
   )
