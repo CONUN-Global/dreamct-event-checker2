@@ -1,39 +1,15 @@
-import { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { useSendToken } from '../../hooks/useSendToken'
-import { setCode, setToken } from '../../store/tokenSlice'
 import { Button } from '@mui/material'
-import { useLocation } from 'react-router-dom'
 import styles from './style.module.scss'
 import { useSprings, animated } from 'react-spring'
 
 const iconsConfig = [
-  { x: 6, y: 35 },
-  { x: 0, y: 16 },
-  { x: 0, y: 5 },
-  { x: 8, y: 20 },
-  { x: 3, y: 10 }
+  { x: 0, y: 266 },
+  { x: 0, y: 245 },
+  { x: 8, y: 60 },
+  { x: 3, y: 50 }
 ]
 
 export default function Home() {
-  const dispatch = useDispatch()
-  const { token, code } = useSelector((state) => state.token)
-  const [hasClicked, setHasClicked] = useState(false)
-  const [message, setMessage] = useState({ text: '', type: null })
-  const [copyStatus, setCopyStatus] = useState(null)
-
-  const location = useLocation()
-  const mutation = useSendToken(token)
-
-  useEffect(() => {
-    const searchParams = new URLSearchParams(location.search)
-    const urlToken = searchParams.get('token')
-
-    if (urlToken) {
-      dispatch(setToken(urlToken))
-    }
-  }, [location, dispatch])
-
   const springs = useSprings(
     iconsConfig.length,
     iconsConfig.map((item, index) => ({
@@ -47,67 +23,25 @@ export default function Home() {
     }))
   )
 
-  const handleClick = async () => {
-    if (!token) return
-
-    if (!code) {
-      if (mutation?.data?.data?.code) {
-        dispatch(setCode(mutation?.data?.data?.code))
-      } else {
-        setHasClicked(true)
-        try {
-          await mutation.mutateAsync()
-          setMessage({
-            text: '코드 발급이 완료되었습니다.',
-            type: 'success'
-          })
-        } catch (error) {
-          setMessage({
-            text: 'Error! Failed to submit your token.',
-            type: 'error'
-          })
-        }
-      }
-    }
-
-    if (!!code || mutation?.data?.data?.code) {
-      navigator.clipboard.writeText(code || mutation?.data?.data?.code)
-      setCopyStatus('Copied')
-      setTimeout(() => {
-        setCopyStatus(null)
-      }, 1000)
-    }
-  }
-
-  console.log('data: ', mutation?.data?.data)
-
   return (
     <div className={styles.container}>
       <div className={styles.innerContainer}>
         {springs.map((props, index) => (
           <animated.div
-            key={`goldenIcon${index + 1}`}
-            className={styles[`goldenIcon${index + 1}`]}
+            key={`goldenIcon${index + 2}`}
+            className={styles[`goldenIcon${index + 2}`]}
             style={props}
           >
             <img
-              src={`/golden-round-icons/icon${index + 1}.svg`}
-              alt={`Golden Icon ${index + 1}`}
-              width={
-                index === 0 || index === 1
-                  ? 85.95
-                  : index === 4
-                  ? 108.12
-                  : 69.41
-              }
+              src={`/golden-round-icons/icon${index + 2}.svg`}
+              alt={`Golden Icon ${index + 2}`}
+              width={index === 0 ? 85.95 : index === 3 ? 108.12 : 69.41}
               height={
                 index === 0
-                  ? 121.43
-                  : index === 1
                   ? 86.5
-                  : index === 2
+                  : index === 1
                   ? 41.06
-                  : index === 3
+                  : index === 2
                   ? 69.41
                   : 114.86
               }
@@ -157,56 +91,10 @@ export default function Home() {
             응모게임에 1회 참여 가능한 응모코인을 드립니다!
           </p>
         </div>
-
-        {/* Third div block */}
-        <div className={styles.block3}>
-          <div className={styles.block3Item1}>나의 응모코드</div>
-          <div className={styles.block3Item2} onClick={() => handleClick()}>
-            <p>
-              {copyStatus
-                ? copyStatus
-                : !!code
-                ? code
-                : mutation.isLoading
-                ? 'Loading...'
-                : hasClicked
-                ? mutation?.data?.data?.code
-                : '코드 받기'}
-            </p>
-            <img
-              src='/copy-icon.svg'
-              alt='Copy Icon'
-              width={32.61}
-              height={32.61}
-              className={styles.copyIcon}
-            />
-          </div>
-
-          {message && (
-            <p className={`${styles.message} ${styles[message.type]}`}>
-              {message.text}
-            </p>
-          )}
-          <div className={styles.block3Item3}>
-            - <span>싸이월드 회원에 한 해</span> 1만 명 선착순 지급 <br /> -
-            응모코드를 복사 혹은 캡처 후 메타콘 지갑을 설치하여 응모코인을
-            받으세요. <br /> - 응모코드는 분실하거나 사라지면 다시 받을 수
-            없습니다.
-          </div>
-        </div>
       </div>
 
       {/* New div block */}
       <div className={styles.newBlock}>
-        <div className={styles.newBlockItem1}>
-          응모코드 <span>사용방법</span>
-        </div>
-        <img
-          src='/metacon-detail-icon.svg'
-          alt='Icon'
-          width={349.5}
-          height={218.96}
-        />
         <a
           href='https://play.google.com/store/apps/details?id=com.metacon&pli=1'
           target='_blank'
